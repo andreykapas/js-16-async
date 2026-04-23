@@ -38,6 +38,13 @@ const renderCountry = function (data, className = '') {
   countriesContainer.insertAdjacentHTML('beforeend', html);
 };
 
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(res => {
+    if (!res.ok) throw new Error(`${errorMsg} (${res.status})`);
+    return res.json();
+  });
+};
+
 const getCountryAndNeighbour = function (country) {
   // const request = new XMLHttpRequest();
   // request.open(
@@ -45,19 +52,20 @@ const getCountryAndNeighbour = function (country) {
   //   `https://countries-api-836d.onrender.com/countries/name/${country}`,
   // );
   // request.send();
-
-  const request = fetch(
+  getJSON(
     `https://countries-api-836d.onrender.com/countries/name/${country}`,
+    'Country not found',
   )
-    .then(res => res.json())
     .then(data => {
       renderCountry(data[0]);
-      const neighbour = data[0].borders?.[0];
-      return fetch(
+      const neighbour = data[0].borders?.[100];
+
+      if (!neighbour) throw new Error(`No neighbour found!`);
+      return getJSON(
         `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+        'Neighbour non found',
       );
     })
-    .then(res => res.json())
     .then(data => renderCountry(data, 'neighbour'))
     .catch(err => {
       console.error(`${err}`);
