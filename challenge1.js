@@ -33,10 +33,16 @@ const whereAmI = function (lat, lng) {
     fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
     )
-      .then(res => res.json())
+      // 5. This API allows you to make only 3 requests per second. If you reload fast, you will get this error with code 403. This is an error with the request. Remember, fetch() does NOT reject the promise in this case. So create an error to reject the promise yourself, with a meaningful error message.
+      .then(res => {
+        if (!res.ok) throw new Error(`Problem with geocoding! (${res.status})`);
+        return res.json();
+      })
       // .then(data => console.log(data));
       // 3. Once you have the data, take a look at it in the console to see all the attributes that you recieved about the provided location. Then, using this data, log a messsage like this to the console: 'You are in Berlin, Germany'
       .then(data => console.log(`You are in ${data.city}, ${data.countryName}`))
+      // 4. Chain a .catch method to the end of the promise chain and log errors to the console
+      .catch(err => console.error(`Something went wrong! ${err.message}`))
   );
 };
 
