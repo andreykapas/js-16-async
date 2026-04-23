@@ -1,3 +1,4 @@
+/* global getJSON, renderCountry */
 'use strict';
 
 // Coding Challenge #1
@@ -40,7 +41,13 @@ const whereAmI = function (lat, lng) {
       })
       // .then(data => console.log(data));
       // 3. Once you have the data, take a look at it in the console to see all the attributes that you recieved about the provided location. Then, using this data, log a messsage like this to the console: 'You are in Berlin, Germany'
-      .then(data => console.log(`You are in ${data.city}, ${data.countryName}`))
+      .then(data => {
+        console.log(`You are in ${data.city}, ${data.countryName}`);
+        return getJSON(
+          `https://countries-api-836d.onrender.com/countries/alpha/${data.countryCode}`,
+        );
+      })
+      .then(data => renderCountry(data))
       // 4. Chain a .catch method to the end of the promise chain and log errors to the console
       .catch(err => console.error(`Something went wrong! ${err.message}`))
   );
