@@ -36,34 +36,48 @@ const renderCountry = function (data, className = '') {
 };
 
 const getCountryAndNeighbour = function (country) {
-  const request = new XMLHttpRequest();
-  request.open(
-    'GET',
+  // const request = new XMLHttpRequest();
+  // request.open(
+  //   'GET',
+  //   `https://countries-api-836d.onrender.com/countries/name/${country}`,
+  // );
+  // request.send();
+
+  const request = fetch(
     `https://countries-api-836d.onrender.com/countries/name/${country}`,
-  );
-  request.send();
+  )
+    .then(res => res.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+      return fetch(
+        `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+      );
+    })
+    .then(res => res.json())
+    .then(data => renderCountry(data, 'neighbour'));
 
-  request.addEventListener('load', function () {
-    const [data] = JSON.parse(this.responseText);
-    console.log(data);
-    const neighbour = data.borders?.[0];
-    console.log(neighbour);
+  // request.addEventListener('load', function () {
+  //   const [data] = JSON.parse(this.responseText);
+  //   console.log(data);
+  //   const neighbour = data.borders?.[0];
+  //   console.log(neighbour);
 
-    renderCountry(data);
-    const request2 = new XMLHttpRequest();
-    request2.open(
-      'GET',
-      `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
-    );
-    request2.send();
+  //   renderCountry(data);
+  //   const request2 = new XMLHttpRequest();
+  //   request2.open(
+  //     'GET',
+  //     `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+  //   );
+  //   request2.send();
 
-    request2.addEventListener('load', function () {
-      const data2 = JSON.parse(this.responseText);
-      console.log(data2);
+  //   request2.addEventListener('load', function () {
+  //     const data2 = JSON.parse(this.responseText);
+  //     console.log(data2);
 
-      renderCountry(data2, 'neighbour');
-    });
-  });
+  //     renderCountry(data2, 'neighbour');
+  //   });
+  // });
 };
 
 getCountryAndNeighbour('belarus');
