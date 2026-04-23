@@ -15,6 +15,10 @@ const countriesContainer = /** @type {HTMLElement} */ (
 
 ///////////////////////////////////////
 
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+};
+
 const renderCountry = function (data, className = '') {
   const html = `
     <article class="country ${className}">
@@ -32,7 +36,6 @@ const renderCountry = function (data, className = '') {
   `;
 
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = '1';
 };
 
 const getCountryAndNeighbour = function (country) {
@@ -55,7 +58,12 @@ const getCountryAndNeighbour = function (country) {
       );
     })
     .then(res => res.json())
-    .then(data => renderCountry(data, 'neighbour'));
+    .then(data => renderCountry(data, 'neighbour'))
+    .catch(err => {
+      console.error(`${err}`);
+      renderError(`Something went wrong: ${err.message}`);
+    })
+    .finally(() => (countriesContainer.style.opacity = '1'));
 
   // request.addEventListener('load', function () {
   //   const [data] = JSON.parse(this.responseText);
@@ -80,4 +88,6 @@ const getCountryAndNeighbour = function (country) {
   // });
 };
 
-getCountryAndNeighbour('belarus');
+btn.addEventListener('click', function () {
+  getCountryAndNeighbour('belarus');
+});
