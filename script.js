@@ -99,3 +99,11 @@ const getCountryAndNeighbour = function (country) {
 btn.addEventListener('click', function () {
   getCountryAndNeighbour('belarus');
 });
+
+const getPosition = function () {
+  return new Promise(function (res, rej) {
+    navigator.geolocation.getCurrentPosition(res, rej);
+  });
+};
+
+getPosition().then(res => console.log(res));
