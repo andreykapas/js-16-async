@@ -24,7 +24,8 @@ TEST DATA: Images in the img folder. Test the error handler by passing a wrong i
 GOOD LUCK 😀
 */
 
-// 1.
+let currentImg;
+
 const createImage = function (imgPath) {
   return new Promise(function (res, rej) {
     const img = document.createElement('img');
@@ -36,3 +37,27 @@ const createImage = function (imgPath) {
     img.addEventListener('error', () => rej(new Error('Image not found')));
   });
 };
+
+const wait = function (seconds) {
+  return new Promise(function (res) {
+    setTimeout(() => res(), seconds * 1000);
+  });
+};
+
+createImage('img/img-1.jpg')
+  .then(img => {
+    currentImg = img;
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+    return createImage('img/img-2.jpg');
+  })
+  .then(img => {
+    currentImg = img;
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+  })
+  .catch(err => console.log(err.message));
