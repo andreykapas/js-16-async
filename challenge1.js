@@ -27,26 +27,42 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
-const whereAmI = function () {
-  getPosition()
-    .then(pos => {
-      const { latitude: lat, longitude: lng } = pos.coords;
-      return fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
-      );
-    })
-    .then(res => {
-      if (!res.ok) throw new Error(`Problem with geocoding! (${res.status})`);
-      return res.json();
-    })
-    .then(data => {
-      console.log(`You are in ${data.city}, ${data.countryName}`);
-      return getJSON(
-        `https://countries-api-836d.onrender.com/countries/alpha/${data.countryCode}`,
-      );
-    })
-    .then(data => renderCountry(data))
-    .catch(err => console.error(`Something went wrong! ${err.message}`));
+// const whereAmI = function () {
+//   getPosition()
+//     .then(pos => {
+//       const { latitude: lat, longitude: lng } = pos.coords;
+//       return fetch(
+//         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+//       );
+//     })
+//     .then(res => {
+//       if (!res.ok) throw new Error(`Problem with geocoding! (${res.status})`);
+//       return res.json();
+//     })
+//     .then(data => {
+//       console.log(`You are in ${data.city}, ${data.countryName}`);
+//       return getJSON(
+//         `https://countries-api-836d.onrender.com/countries/alpha/${data.countryCode}`,
+//       );
+//     })
+//     .then(data => renderCountry(data))
+//     .catch(err => console.error(`Something went wrong! ${err.message}`));
+// };
+
+const whereAmI = async function () {
+  const pos = await getPosition();
+  const { latitude: lat, longitude: lng } = pos.coords;
+  const resGeo = await fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+  );
+  const dataGeo = await resGeo.json();
+  const res = await fetch(
+    `https://countries-api-836d.onrender.com/countries/alpha/${dataGeo.countryCode}`,
+  );
+  const data = await res.json();
+  console.log(data);
+  renderCountry(data);
 };
 
 whereAmI();
+console.log('FIRST');
