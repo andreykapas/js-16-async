@@ -50,18 +50,22 @@ GOOD LUCK 😀
 // };
 
 const whereAmI = async function () {
-  const pos = await getPosition();
-  const { latitude: lat, longitude: lng } = pos.coords;
-  const resGeo = await fetch(
-    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
-  );
-  const dataGeo = await resGeo.json();
-  const res = await fetch(
-    `https://countries-api-836d.onrender.com/countries/alpha/${dataGeo.countryCode}`,
-  );
-  const data = await res.json();
-  console.log(data);
-  renderCountry(data);
+  try {
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+    const resGeo = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+    );
+    const dataGeo = await resGeo.json();
+    const res = await fetch(
+      `https://countries-api-836d.onrender.com/countries/alpha/${dataGeo.countryCode}`,
+    );
+    const data = await res.json();
+    console.log(data);
+    renderCountry(data);
+  } catch (err) {
+    console.error(err.message);
+  }
 };
 
 whereAmI();
