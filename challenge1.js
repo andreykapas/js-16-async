@@ -63,10 +63,26 @@ const whereAmI = async function () {
     const data = await res.json();
     console.log(data);
     renderCountry(data);
+    return `You are in the ${data.name}`;
   } catch (err) {
     console.error(err.message);
+    throw err;
   }
 };
 
-whereAmI();
-console.log('FIRST');
+console.log('1: FIRST');
+// whereAmI()
+//   .then(city => console.log(`2: ${city}`))
+//   .catch(err => console.error(`2: ${err.message}`))
+//   .finally(() => console.log(`3: LAST`));
+
+(async function () {
+  try {
+    const country = await whereAmI();
+    console.log(`2: ${country}`);
+  } catch (err) {
+    console.error(`2: ${err.message}`);
+  } finally {
+    console.log('3: LAST');
+  }
+})();
