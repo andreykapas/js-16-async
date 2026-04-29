@@ -87,28 +87,38 @@ const whereAmI = async function () {
 //   }
 // })();
 
-const get3Countries = async function (c1, c2, c3) {
-  try {
-    // const [data1] = await getJSON(
-    //   `https://countries-api-836d.onrender.com/countries/name/${c1}`,
-    // );
-    // const [data2] = await getJSON(
-    //   `https://countries-api-836d.onrender.com/countries/name/${c2}`,
-    // );
-    // const [data3] = await getJSON(
-    //   `https://countries-api-836d.onrender.com/countries/name/${c3}`,
-    // );
+// const get3Countries = async function (c1, c2, c3) {
+//   try {
+//     // const [data1] = await getJSON(
+//     //   `https://countries-api-836d.onrender.com/countries/name/${c1}`,
+//     // );
+//     // const [data2] = await getJSON(
+//     //   `https://countries-api-836d.onrender.com/countries/name/${c2}`,
+//     // );
+//     // const [data3] = await getJSON(
+//     //   `https://countries-api-836d.onrender.com/countries/name/${c3}`,
+//     // );
 
-    const data = await Promise.all([
-      getJSON(`https://countries-api-836d.onrender.com/countries/name/${c1}`),
-      getJSON(`https://countries-api-836d.onrender.com/countries/name/${c2}`),
-      getJSON(`https://countries-api-836d.onrender.com/countries/name/${c3}`),
-    ]);
+//     const data = await Promise.all([
+//       getJSON(`https://countries-api-836d.onrender.com/countries/name/${c1}`),
+//       getJSON(`https://countries-api-836d.onrender.com/countries/name/${c2}`),
+//       getJSON(`https://countries-api-836d.onrender.com/countries/name/${c3}`),
+//     ]);
 
-    console.log(data.map(d => d[0].capital));
-  } catch (error) {
-    console.error(error);
-  }
-};
+//     console.log(data.map(d => d[0].capital));
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
-get3Countries('portugal', 'canada', 'tanzania');
+// get3Countries('portugal', 'canada', 'tanzania');
+
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/italy`),
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/germany`),
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/belarus`),
+  ]);
+
+  console.log(res[0]);
+})();
